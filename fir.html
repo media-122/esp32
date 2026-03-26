@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Send Data to Firebase</title>
+</head>
+<body>
+  <h2>Send Data</h2>
+  <form id="dataForm">
+    Name: <input type="text" name="name" required><br>
+    Value: <input type="number" name="value" required><br>
+    <button type="submit">Send</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    const form = document.getElementById("dataForm");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => { data[key] = value; });
+
+      try {
+        const res = await fetch("/api/data", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if(result.success){
+          status.innerText = "Data sent successfully! Firebase ID: " + result.firebase.name;
+        } else {
+          status.innerText = "Error: " + result.error;
+        }
+      } catch(err) {
+        status.innerText = "Fetch error: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
