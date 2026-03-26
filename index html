@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        pre { background: #f4f4f4; padding: 20px; display: inline-block; text-align: left; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>JSON ڈیٹا</h1>
+    <pre id="json-data">Loading...</pre>
+
+    <script>
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('json-data').innerHTML = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('json-data').innerHTML = 'Error: ' + error;
+            });
+    </script>
+</body>
+</html>
