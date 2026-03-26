@@ -1,0 +1,42 @@
+import fetch from "node-fetch";
+
+export default async function handler(req, res) {
+  if(req.method === "POST"){
+    const data = req.body;
+
+    try {
+      // Firebase URL
+      const FIREBASE_URL = "https://mydata22-732af-default-rtdb.firebaseio.com/data.json";
+      const FIREBASE_LOGS = "https://mydata22-732af-default-rtdb.firebaseio.com/logs.json";
+
+      // Current Data (PUT)
+      const putRes = await fetch(FIREBASE_URL, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+      });
+
+      // Logs (POST)
+      const postRes = await fetch(FIREBASE_LOGS, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+      });
+
+      const putJson = await putRes.json();
+      const postJson = await postRes.json();
+
+      res.status(200).json({
+        status: "OK",
+        put: putJson,
+        post: postJson
+      });
+
+    } catch (e) {
+      res.status(500).json({error: e.message});
+    }
+
+  } else {
+    res.status(405).json({error: "Only POST allowed"});
+  }
+}
