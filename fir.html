@@ -1,40 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Send Data to Firebase</title>
+<meta charset="UTF-8">
+<title>Live Firebase Data</title>
 </head>
 <body>
-  <h2>Send Data</h2>
-  <form id="dataForm">
-    Name: <input type="text" name="name" required><br>
-    Value: <input type="number" name="value" required><br>
-    <button type="submit">Send</button>
-  </form>
+<h2>Current Value (Live)</h2>
+<p>Name: <span id="name">--</span></p>
+<p>Value: <span id="value">--</span></p>
 
-  <p id="status"></p>
+<script>
+const firebaseURL = "https://mydata22-732af.firebaseio.com/current.json";
 
-  <script>
-    const form = document.getElementById("dataForm");
-    const status = document.getElementById("status");
+async function fetchData() {
+  try {
+    const res = await fetch(firebaseURL);
+    const data = await res.json();
+    document.getElementById("name").innerText = data.name || "--";
+    document.getElementById("value").innerText = data.value || "--";
+  } catch (e) {
+    console.error("Error fetching data:", e);
+  }
+}
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const data = {};
-      formData.forEach((value, key) => { data[key] = value; });
-
-      try {
-        const res = await fetch("/api/data", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        const result = await res.json();
-        if(result.success){
-          status.innerText = "Data sent successfully! Firebase ID: " + result.firebase.name;
-        } else {
-          status.innerText = "Error: " + result.error;
+// Fetch every 5 seconds
+setInterval(fetchData, 5000);
+fetchData(); // initial fetch
+</script>
+</body>
+</html>          status.innerText = "Error: " + result.error;
         }
       } catch(err) {
         status.innerText = "Fetch error: " + err.message;
