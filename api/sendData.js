@@ -5,8 +5,8 @@ export default async function handler(req, res) {
     const { name, value } = req.body;
 
     // Firebase URLs
-    const firebaseCurrentURL = "https://mydata22-732af-default-rtdb.firebaseio.com/data.json";
-    const firebaseLogsURL = "https://mydata22-732af-default-rtdb.firebaseio.com/logs.json";
+    const firebaseCurrentURL = "https://mydata22-732af.firebaseio.com/data.json";
+    const firebaseLogsURL = "https://mydata22-732af.firebaseio.com/logs.json";
 
     try {
       // 1. Update Current (PUT)
