@@ -1,28 +1,46 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Live Data</title>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        const firebaseConfig = {
-            apiKey: "AIzaSyAfdG_esVVS-gZWOywdKurl60AY1xZesRc",          // یہ وہی Web API Key ہے
-            projectId: "mydata22-732af"     // Firebase پروجیکٹ ID
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        onSnapshot(collection(db, "readings"), (snap) => {
-            const container = document.getElementById("data");
-            container.innerHTML = "";
-            snap.forEach(doc => {
-                const d = doc.data();
-                container.innerHTML += `<div>Value: ${d.value} | Time: ${d.time?.toDate?.() || d.time}</div>`;
-            });
-        });
-    </script>
-</head>
 <body>
-    <h1>Live Sensor Data</h1>
-    <div id="data">Loading...</div>
+
+<h2>Send Data to Firebase via Vercel</h2>
+
+Name:
+<input type="text" id="name"><br><br>
+
+Value:
+<input type="number" id="value"><br><br>
+
+<button onclick="sendData()">Send</button>
+
+<p id="status"></p>
+
+<script>
+
+function sendData(){
+
+  const name = document.getElementById("name").value;
+  const value = document.getElementById("value").value;
+
+  fetch("/api/data", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: name,
+      value: value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("status").innerText =
+      "Data Sent! ID = " + data.firebaseID;
+  })
+  .catch(err => {
+    document.getElementById("status").innerText = err.message;
+  });
+
+}
+
+</script>
+
 </body>
 </html>
