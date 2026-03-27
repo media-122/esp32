@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<h2>Send Data to Firebase via Vercel</h2>
+<h2>Send Data (PUT - No Random Key)</h2>
 
 Name:
 <input type="text" id="name"><br><br>
@@ -21,9 +21,11 @@ function sendData(){
   const name = document.getElementById("name").value;
   const value = document.getElementById("value").value;
 
-  fetch("/api/data", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+  fetch("https://mydata22-732af.firebaseio.com/data.json", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({
       name: name,
       value: value
@@ -31,11 +33,10 @@ function sendData(){
   })
   .then(res => res.json())
   .then(data => {
-    document.getElementById("status").innerText =
-      "Data Sent! ID = " + data.firebaseID;
+    document.getElementById("status").innerText = "Data Saved!";
   })
   .catch(err => {
-    document.getElementById("status").innerText = err.message;
+    document.getElementById("status").innerText = "Error: " + err.message;
   });
 
 }
