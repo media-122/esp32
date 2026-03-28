@@ -12,10 +12,10 @@ setInterval(async () => {
   try {
     // 1️⃣ ESP32 se JSON data lo
     let res = await fetch("http://192.168.8.110/data.json"); 
-    let data = await res.json();
-    let espTime = data.time;
+  //  let data = await res.json();
+   // let espTime = data.time;
 
-    document.getElementById("data").innerText = espTime + " sec";
+    document.getElementById("data").innerText = res + " sec";
 
     // 2️⃣ Firebase me send karo
     
