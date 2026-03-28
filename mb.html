@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ESP32 to Firebase</title>
+</head>
+<body>
+
+<h2>ESP32 Data:</h2>
+<h3 id="data">Loading...</h3>
+
+<script>
+setInterval(async () => {
+  try {
+    // 1️⃣ ESP32 se data lo (JSON endpoint)
+    let res = await fetch("http://192.168.8.110/data.json"); 
+    let data = await res.json(); // JSON parse
+    let espTime = data.time;
+
+    document.getElementById("data").innerText = espTime;
+
+    // 2️⃣ Firebase me send karo (PUT overwrite)
+    await fetch("https://mydata22-732af-default-rtdb.firebaseio.com/data.json", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ time: espTime })
+    });
+
+  } catch (e) {
+    document.getElementById("data").innerText = "Error fetching data";
+    console.error(e);
+  }
+}, 5000); // 3 sec interval
+</script>
+
+</body>
+</html>
