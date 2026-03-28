@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ESP32 to Firebase</title>
+  <meta charset="UTF-8">
+  <title>ESP32 Live Data</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    h1 { color: #333; }
+    #time { font-size: 2em; color: #007BFF; }
+    #status { color: red; margin-top: 10px; }
+  </style>
 </head>
 <body>
 
-<h2>ESP32 Data:</h2>
-<h3 id="data">Loading...</h3>
+<h1>ESP32 Live Data</h1>
+<div>Time (seconds): <span id="time">Loading...</span></div>
+<div id="status"></div>
 
 <script>
-setInterval(async () => {
+async function fetchESPData() {
+  const timeElem = document.getElementById("time");
+  const statusElem = document.getElementById("status");
+
   try {
-    // 1️⃣ ESP32 se data lo (JSON endpoint)
-    let res = await fetch("http://192.168.8.110/data.json"); 
-    let data = await res.json(); // JSON parse
-    let espTime = data.time;
+    // ESP32 ka JSON endpoint
+    const res = await fetch("http://192.168.8.110/data.json");
+    if(!res.ok) throw new Error("ESP32 Not Responding");
 
-    document.getElementById("data").innerText = espTime;
+    const data = await res.json();
+    timeElem.innerText = data.time;
+    statusElem.innerText = "";
 
-    // 2️⃣ Firebase me send karo (PUT overwrite)
-    
-}, 5000); // 3 sec interval
+  } catch(e) {
+    statusElem.innerText = "Error: " + e.message;
+  }
+}
+
+// 1 sec interval pe refresh
+setInterval(fetchESPData, 5000);
+fetchESPData(); // page load par bhi fetch
 </script>
 
 </body>
